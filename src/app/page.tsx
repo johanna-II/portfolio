@@ -1,11 +1,11 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, Mail, Github, Award, Briefcase, Code, Users, Target, Zap, CheckCircle, ArrowRight, Linkedin, FileText, Brain } from 'lucide-react';
+import { ChevronDown, Mail, Award, Briefcase, Code, Target, Zap, CheckCircle, FileText, Brain, Github, Linkedin } from 'lucide-react';
 
 export default function Portfolio() {
   const [activeTab, setActiveTab] = useState('experience');
-  const [isVisible, setIsVisible] = useState({});
+  const [isVisible, setIsVisible] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -48,7 +48,7 @@ export default function Portfolio() {
     },
     {
       company: "Ground X",
-      role: "Senior Quality Engineer", 
+      role: "Senior Quality Engineer",
       period: "2022.02 ~ 2023.02",
       description: "카카오 블록체인 자회사, Klip Wallet 및 NFT Marketplace QA",
       highlights: ["KIP-17 NFT 자동화 개발", "ERC-721A 기술 가이드 작성", "Web3.0 토큰 모듈 QA"],
@@ -95,7 +95,7 @@ export default function Portfolio() {
       tech: ["Python", "Solidity", "Web3", "Blockchain"]
     },
     {
-      title: "데이터 기반 리소스 예측 모델", 
+      title: "데이터 기반 리소스 예측 모델",
       company: "우아한형제들",
       impact: "30%",
       metric: "예측 정확도 향상",
@@ -107,7 +107,7 @@ export default function Portfolio() {
       title: "클라우드 빌링 테스트 자동화",
       company: "NHN",
       impact: "80%",
-      metric: "리소스 절감", 
+      metric: "리소스 절감",
       description: "복잡한 SaaS 빌링 로직 E2E 자동화로 수동 테스트 대체",
       highlights: ["요금제 변경 로직 검증", "Docker 기반 테스트 환경"],
       tech: ["Docker", "Jenkins", "TypeScript", "API Testing"]
@@ -154,33 +154,33 @@ export default function Portfolio() {
       <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden">
         {/* Premium Gradient Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-purple-700 to-indigo-900"></div>
-        
+
         {/* Mesh Gradient Overlay */}
         <div className="absolute inset-0 opacity-50">
           <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/20 via-transparent to-blue-500/20"></div>
           <div className="absolute inset-0 bg-gradient-to-bl from-indigo-500/20 via-transparent to-purple-500/20"></div>
         </div>
-        
+
         {/* Geometric Patterns */}
         <div className="absolute inset-0 overflow-hidden">
           {/* Large Circle */}
           <div className="absolute -top-1/2 -right-1/2 w-[1000px] h-[1000px] rounded-full border border-white/10 animate-spin-slow"></div>
           <div className="absolute -bottom-1/2 -left-1/2 w-[800px] h-[800px] rounded-full border border-white/10 animate-spin-slow-reverse"></div>
-          
+
           {/* Floating Geometric Shapes */}
           <div className="absolute top-20 left-[10%] w-20 h-20 border-2 border-purple-400/20 rotate-45 animate-float"></div>
           <div className="absolute top-40 right-[15%] w-16 h-16 border-2 border-pink-400/20 rounded-full animate-float-delay-2"></div>
           <div className="absolute bottom-40 left-[20%] w-24 h-24 border-2 border-indigo-400/20 animate-float-delay-4"></div>
-          
+
           {/* Premium Grid Pattern */}
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]"></div>
-          
+
           {/* Gradient Orbs - More Sophisticated */}
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full filter blur-3xl animate-pulse-slow"></div>
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/20 rounded-full filter blur-3xl animate-pulse-slow-delay"></div>
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/20 rounded-full filter blur-3xl animate-pulse-slow-delay-2"></div>
         </div>
-        
+
         {/* Particle Effect */}
         <div className="absolute inset-0">
           {[...Array(20)].map((_, i) => (
@@ -203,7 +203,7 @@ export default function Portfolio() {
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
             <span className="text-white/90">Currently @ Moloco</span>
           </div>
-          
+
           <h1 className="text-6xl md:text-8xl font-black mb-4 tracking-tight">
             <span className="inline-block animate-fade-in">I</span>
             <span className="text-red-400 inline-block animate-fade-in animation-delay-100">.</span>
@@ -211,10 +211,10 @@ export default function Portfolio() {
             <span className="text-blue-400 inline-block animate-fade-in animation-delay-300">.</span>
             <span className="inline-block animate-fade-in animation-delay-400">ALL</span>
           </h1>
-          
+
           <h2 className="text-3xl md:text-4xl font-light mb-2 animate-fade-in-up animation-delay-500">Jane Kim (김명지)</h2>
           <p className="text-xl md:text-2xl text-purple-200 mb-8 animate-fade-in-up animation-delay-600">QA Engineer | FE Engineer</p>
-          
+
           <div className="flex gap-4 justify-center flex-wrap animate-fade-in-up animation-delay-700">
             <span className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm border border-white/20 hover:bg-white/20 transition-all cursor-default">
               15년차 전문가
@@ -227,7 +227,7 @@ export default function Portfolio() {
             </span>
           </div>
         </div>
-        
+
         {/* Scroll Indicator - Enhanced */}
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-fade-in animation-delay-800">
           <div className="flex flex-col items-center gap-2">
@@ -241,7 +241,7 @@ export default function Portfolio() {
       <section id="about" className={`py-20 transition-all duration-1000 ${isVisible.about ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">About Me</h2>
-          
+
           <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
             <div className="grid md:grid-cols-3 gap-8">
               {/* Profile */}
@@ -251,7 +251,7 @@ export default function Portfolio() {
                 </div>
                 <h3 className="text-xl font-bold mb-2">Jane Kim (김명지)</h3>
                 <p className="text-gray-600 mb-4">QA Engineer | FE Engineer</p>
-                
+
                 {/* Contact Info - Single Line */}
                 <div className="flex items-center justify-center gap-4 text-sm text-gray-600">
                   <a href="mailto:lucykatz58@gmail.com" className="hover:text-purple-600 transition-colors flex items-center gap-1">
@@ -274,7 +274,7 @@ export default function Portfolio() {
                       <p>• Prompt Engineering</p>
                     </div>
                   </div>
-                  
+
                   <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
                     <div className="flex items-center gap-2 mb-2">
                       <Brain className="w-4 h-4 text-blue-600" />
@@ -304,21 +304,21 @@ export default function Portfolio() {
                 <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
                   데이터 기반 품질 혁신을 주도하는 QA/FE 엔지니어
                 </h3>
-                
+
                 <div className="space-y-4 text-gray-700">
                   <p className="leading-relaxed">
                     현재 <span className="font-semibold text-purple-600">글로벌 애드테크 유니콘 Moloco</span>에서 DSP 클라우드 웹 서비스의 품질 보증과 프론트엔드 개발을 담당하고 있습니다. <span className="font-semibold">Cypress와 BDD 프레임워크</span>를 활용한 E2E 테스트 자동화와 <span className="font-semibold">React.js, styled-components, Tailwind CSS</span>를 사용한 컴포넌트 개발을 통해 제품 품질과 개발 효율성을 동시에 향상시키고 있습니다.
                   </p>
-                  
+
                   <p className="leading-relaxed">
                     <span className="font-semibold text-purple-600">15년 이상의 QA 경험</span>을 바탕으로 대기업부터 스타트업까지 다양한 환경에서 품질 프로세스를 혁신해왔습니다. LG전자에서 8년간 글로벌 SW 인프라를 구축하며 <span className="font-semibold">빌드 실패율을 90%에서 10%로 감소</span>시켰고, Ground X에서는 <span className="font-semibold">NFT 생성 자동화로 98%의 효율성 향상</span>을 달성했습니다.
                   </p>
-                  
+
                   <p className="leading-relaxed">
                     <span className="font-semibold text-purple-600">기술적 전문성과 비즈니스 임팩트</span>를 동시에 추구합니다. 우아한형제들에서 ARIMA 모델 기반 리소스 예측 시스템을 구축하여 <span className="font-semibold">효율성을 30% 향상</span>시켰으며, 개인적으로 <span className="font-semibold">LLM을 활용한 테스트 케이스 생성 시스템</span> 특허를 출원하는 등 혁신적인 솔루션 개발에도 적극적으로 참여하고 있습니다.
                   </p>
                 </div>
-                
+
                 {/* Key Achievements */}
                 <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
                   <div className="bg-purple-50 rounded-lg p-4">
@@ -358,28 +358,26 @@ export default function Portfolio() {
       <section id="work" className={`py-20 bg-white transition-all duration-1000 ${isVisible.work ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Work & Projects</h2>
-          
+
           {/* Tab Navigation - Enhanced */}
           <div className="flex justify-center mb-8">
             <div className="bg-gray-100 rounded-full p-1 inline-flex">
               <button
                 onClick={() => setActiveTab('experience')}
-                className={`px-6 py-2 rounded-full transition-all ${
-                  activeTab === 'experience' 
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md' 
+                className={`px-6 py-2 rounded-full transition-all ${activeTab === 'experience'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
                     : 'text-gray-600 hover:text-gray-900'
-                }`}
+                  }`}
               >
                 <Briefcase className="inline-block w-4 h-4 mr-2" />
                 Key Experiences
               </button>
               <button
                 onClick={() => setActiveTab('projects')}
-                className={`px-6 py-2 rounded-full transition-all ${
-                  activeTab === 'projects' 
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md' 
+                className={`px-6 py-2 rounded-full transition-all ${activeTab === 'projects'
+                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
                     : 'text-gray-600 hover:text-gray-900'
-                }`}
+                  }`}
               >
                 <Zap className="inline-block w-4 h-4 mr-2" />
                 Key Projects
@@ -395,7 +393,7 @@ export default function Portfolio() {
                 <div className="relative mb-8 h-20">
                   {/* Timeline Bar - centered vertically */}
                   <div className="absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-purple-200 via-purple-400 to-pink-200 rounded-full transform -translate-y-1/2"></div>
-                  
+
                   {/* Timeline Points */}
                   <div className="absolute inset-0 flex justify-between items-center">
                     {/* Start Point */}
@@ -405,7 +403,7 @@ export default function Portfolio() {
                       </div>
                       <div className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 whitespace-nowrap">Start</div>
                     </div>
-                    
+
                     {/* Journey Milestones */}
                     <div className="flex-1 flex justify-around items-center px-8">
                       <div className="relative">
@@ -421,7 +419,7 @@ export default function Portfolio() {
                         <span className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-400 whitespace-nowrap">2023</span>
                       </div>
                     </div>
-                    
+
                     {/* Current Point */}
                     <div className="relative z-10">
                       <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-full w-16 h-16 flex items-center justify-center shadow-lg animate-pulse">
@@ -431,7 +429,7 @@ export default function Portfolio() {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Experience Years Badge - Moved below timeline */}
                 <div className="flex justify-center mb-6">
                   <div className="bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 px-4 py-2 rounded-full text-sm font-semibold shadow-md inline-flex items-center gap-2">
@@ -439,7 +437,7 @@ export default function Portfolio() {
                     <span>15+ Years Journey</span>
                   </div>
                 </div>
-                
+
                 {/* Experience Cards - Compact */}
                 <div className="grid gap-4">
                   {experiences.map((exp, idx) => (
@@ -453,7 +451,7 @@ export default function Portfolio() {
                           </div>
                           <p className="text-purple-600 font-medium mb-2">{exp.role}</p>
                           <p className="text-sm text-gray-600 mb-3">{exp.description}</p>
-                          
+
                           {/* Highlights */}
                           <div className="flex flex-wrap gap-2 mb-3">
                             {exp.highlights.map((item, i) => (
@@ -463,14 +461,14 @@ export default function Portfolio() {
                             ))}
                           </div>
                         </div>
-                        
+
                         {/* Impact Badge */}
                         <div className="bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-lg p-4 text-center min-w-[150px]">
                           <div className="text-xs opacity-90">Key Achievement</div>
                           <div className="text-lg font-bold mt-1">{exp.impact}</div>
                         </div>
                       </div>
-                      
+
                       {/* Tech Stack */}
                       <div className="flex gap-2 mt-3 pt-3 border-t border-gray-100">
                         {exp.tech.map((tech, i) => (
@@ -489,7 +487,7 @@ export default function Portfolio() {
                   <div key={idx} className="group relative bg-white rounded-xl p-6 hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden">
                     {/* Background Gradient on Hover */}
                     <div className="absolute inset-0 bg-gradient-to-br from-purple-50 to-pink-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    
+
                     <div className="relative z-10">
                       {/* Header */}
                       <div className="flex items-start justify-between mb-3">
@@ -502,10 +500,10 @@ export default function Portfolio() {
                           <div className="text-xs text-gray-600">{project.metric}</div>
                         </div>
                       </div>
-                      
+
                       {/* Description */}
                       <p className="text-sm text-gray-600 mb-3">{project.description}</p>
-                      
+
                       {/* Highlights */}
                       <div className="space-y-1 mb-4">
                         {project.highlights.map((highlight, i) => (
@@ -515,7 +513,7 @@ export default function Portfolio() {
                           </div>
                         ))}
                       </div>
-                      
+
                       {/* Tech Stack */}
                       <div className="flex gap-2 flex-wrap">
                         {project.tech.map((tech, i) => (
@@ -530,7 +528,7 @@ export default function Portfolio() {
               </div>
             )}
           </div>
-          
+
           {/* Summary Stats */}
           <div className="mt-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 text-white text-center">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -559,7 +557,7 @@ export default function Portfolio() {
       <section id="skills" className={`py-20 transition-all duration-1000 ${isVisible.skills ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="text-4xl font-bold text-center mb-12">Technical Skills</h2>
-          
+
           <div className="bg-white rounded-xl shadow-lg p-8 md:p-10">
             <div className="grid md:grid-cols-2 gap-8">
               {/* Left Column - Testing & QA Skills */}
@@ -576,7 +574,7 @@ export default function Portfolio() {
                         <span className="text-sm text-gray-500">{skill.level}%</span>
                       </div>
                       <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div 
+                        <div
                           className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000"
                           style={{ width: isVisible.skills ? `${skill.level}%` : '0%' }}
                         />
@@ -600,7 +598,7 @@ export default function Portfolio() {
                         <span className="text-sm text-gray-500">{skill.level}%</span>
                       </div>
                       <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div 
+                        <div
                           className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full transition-all duration-1000"
                           style={{ width: isVisible.skills ? `${skill.level}%` : '0%' }}
                         />
@@ -666,7 +664,7 @@ export default function Portfolio() {
               LinkedIn
             </a>
           </div>
-          
+
           {/* Quick Stats */}
           <div className="mt-12 pt-8 border-t border-white/20">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
