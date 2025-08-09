@@ -6,6 +6,7 @@ import { ChevronDown, Mail, Award, Briefcase, Code, Target, Zap, CheckCircle, Fi
 export default function Portfolio() {
   const [activeTab, setActiveTab] = useState('experience');
   const [isVisible, setIsVisible] = useState<Record<string, boolean>>({});
+  const [particles, setParticles] = useState<Array<{ left: string; delay: string; duration: string }>>([]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -25,6 +26,15 @@ export default function Portfolio() {
     });
 
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const generated = Array.from({ length: 20 }, () => ({
+      left: `${Math.random() * 100}%`,
+      delay: `${Math.random() * 10}s`,
+      duration: `${10 + Math.random() * 20}s`,
+    }));
+    setParticles(generated);
   }, []);
 
   const experiences = [
@@ -183,15 +193,11 @@ export default function Portfolio() {
 
         {/* Particle Effect */}
         <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
+          {particles.map((p, i) => (
             <div
               key={i}
               className="absolute w-1 h-1 bg-white/30 rounded-full animate-float-up"
-              style={{
-                left: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 10}s`,
-                animationDuration: `${10 + Math.random() * 20}s`
-              }}
+              style={{ left: p.left, animationDelay: p.delay, animationDuration: p.duration }}
             ></div>
           ))}
         </div>
@@ -281,9 +287,9 @@ export default function Portfolio() {
                       <h4 className="text-sm font-semibold text-blue-700">Education</h4>
                     </div>
                     <div className="space-y-1 text-xs text-gray-700">
-                      <p>• Master's in IT</p>
+                      <p>• Master’s in IT</p>
                       <p className="text-gray-500 text-[10px]">&nbsp;&nbsp;(In Progress)</p>
-                      <p>• Bachelor's in ICE</p>
+                      <p>• Bachelor’s in ICE</p>
                       <p className="text-gray-500 text-[10px]">&nbsp;&nbsp;(Completed)</p>
                     </div>
                   </div>
@@ -646,7 +652,7 @@ export default function Portfolio() {
       {/* Contact Section */}
       <section id="contact" className="py-20 bg-gradient-to-br from-purple-600 to-indigo-700 text-white">
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-4xl font-bold mb-8">Let's Connect!</h2>
+          <h2 className="text-4xl font-bold mb-8">Let’s Connect!</h2>
           <p className="text-xl mb-8 text-purple-100">
             품질과 혁신의 교차점에서 함께 성장할 기회를 찾고 있습니다
           </p>
