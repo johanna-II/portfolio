@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, Mail, Github, Award, Briefcase, Code, Users, Target, Zap, CheckCircle, ArrowRight, Linkedin, FileText, Brain } from 'lucide-react';
 
