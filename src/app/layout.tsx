@@ -3,12 +3,10 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const inter: ReturnType<typeof Inter> = Inter({
-  variable: "--font-inter",
   subsets: ["latin"],
 });
 
 const jetbrainsMono: ReturnType<typeof JetBrains_Mono> = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
 });
 
@@ -25,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
+        className={`${inter.className} ${jetbrainsMono.className} antialiased`}
       >
         {children}
       </body>
