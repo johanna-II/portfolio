@@ -29,13 +29,6 @@ export const translations = {
         patents: "Patents"
       },
       certifications: "Certifications",
-      education: "Education",
-      educationDetails: {
-        masters: "Master's in IT",
-        inProgress: "(In Progress)",
-        bachelors: "Bachelor's in ICE",
-        completed: "(Completed)"
-      },
       patentsField: "2 Patents Filed",
       patentsDetail: "AI/LLM Test Generation & Voice Visualization"
     },
@@ -106,13 +99,6 @@ export const translations = {
         patents: "특허"
       },
       certifications: "자격증",
-      education: "학력",
-      educationDetails: {
-        masters: "IT 석사",
-        inProgress: "(진행중)",
-        bachelors: "정보통신공학 학사",
-        completed: "(졸업)"
-      },
       patentsField: "특허 2건 출원",
       patentsDetail: "AI/LLM 테스트 생성 & 음성 시각화"
     },
@@ -153,8 +139,10 @@ export const translations = {
       lg: "글로벌 가전 1위 기업의 SW 품질 인프라 구축 및 운영"
     }
   }
-} as const;
+};
 
-export type Translations = typeof translations;
-export type Lang = keyof Translations;
+export enum Lang {
+  EN = 'en',
+  KO = 'ko'
+}
 
