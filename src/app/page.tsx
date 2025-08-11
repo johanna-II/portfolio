@@ -367,7 +367,7 @@ export default function Portfolio() {
                   J
                 </div>
                 <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
-                  Jane Kim ({lang === Lang.EN ? '김도은' : '김도은'})
+                  Jane Kim ({lang === Lang.EN ? 'Doeun Kim' : '김도은'})
                 </h3>
                 <p className="text-gray-700 dark:text-gray-300 mb-4 font-medium">{t.hero.role}</p>
 
