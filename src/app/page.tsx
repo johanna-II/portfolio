@@ -1,13 +1,53 @@
 "use client"
 
-import React, { useState, useEffect } from 'react';
-import { ChevronDown, Mail, Award, Briefcase, Code, Target, Zap, CheckCircle, FileText, Brain, Github, Linkedin } from 'lucide-react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { 
+  ChevronDown, 
+  Mail, 
+  Github, 
+  Award, 
+  Briefcase, 
+  Code, 
+  Target, 
+  Zap, 
+  CheckCircle, 
+  Linkedin, 
+  FileText, 
+  Brain, 
+  Globe, 
+  Moon, 
+  Sun,
+  Menu
+} from 'lucide-react';
+import MobileMenu from '@/components/MobileMenu';
+import { translations, type Lang } from '@/i18n/translations';
+
+// Constants
+const INTERSECTION_THRESHOLD = 0.1;
+const PARTICLE_COUNT = 20;
+
 
 export default function Portfolio() {
   const [activeTab, setActiveTab] = useState('experience');
   const [isVisible, setIsVisible] = useState<Record<string, boolean>>({});
-  const [particles, setParticles] = useState<Array<{ left: string; delay: string; duration: string }>>([]);
+  const [lang, setLang] = useState<Lang>('ko');
+  const [isDark, setIsDark] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  const t = useMemo(() => translations[lang], [lang]);
+
+  // Initialize theme based on system preference
+  useEffect(() => {
+    const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+    setIsDark(prefersDark);
+  }, []);
+
+  // Apply dark mode class
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', isDark);
+  }, [isDark]);
+
+  // Intersection observer for animations
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -18,118 +58,147 @@ export default function Portfolio() {
           }));
         });
       },
-      { threshold: 0.1 }
+      { threshold: INTERSECTION_THRESHOLD }
     );
 
-    document.querySelectorAll('section').forEach((section) => {
-      observer.observe(section);
-    });
+    const sections = document.querySelectorAll('section');
+    sections.forEach((section) => observer.observe(section));
 
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    const generated = Array.from({ length: 20 }, () => ({
-      left: `${Math.random() * 100}%`,
-      delay: `${Math.random() * 10}s`,
-      duration: `${10 + Math.random() * 20}s`,
-    }));
-    setParticles(generated);
+  // Handlers
+  const handleLangToggle = useCallback(() => {
+    setLang(prev => prev === 'ko' ? 'en' : 'ko');
+  }, []);
+
+  const handleThemeToggle = useCallback(() => {
+    setIsDark(prev => !prev);
+  }, []);
+
+  const handleMobileMenuToggle = useCallback(() => {
+    setIsMobileMenuOpen(prev => !prev);
   }, []);
 
   const experiences = [
     {
       company: "Moloco",
-      role: "QA Engineer II | FE Engineer",
+      role: lang === 'en' ? "QA Engineer II | FE Engineer" : "QA Engineer II | FE Engineer",
       period: "2024.08 ~ Present",
-      description: "글로벌 애드테크 유니콘, DSP Cloud Web Service 품질 보증 및 FE 개발",
-      highlights: ["CI/CD 파이프라인 개선", "Cypress BDD 테스트 프레임워크 구축", "React 컴포넌트 개발", "Firestore 버전 관리 시스템"],
-      impact: "E2E 테스트 환경 개선",
+      description: t.companies.moloco,
+      highlights: lang === 'en' 
+        ? ["CI/CD pipeline improvement", "Cypress BDD test framework", "React component development", "Firestore version management"]
+        : ["CI/CD 파이프라인 개선", "Cypress BDD 테스트 프레임워크 구축", "React 컴포넌트 개발", "Firestore 버전 관리 시스템"],
+      impact: lang === 'en' ? "E2E test environment improvement" : "E2E 테스트 환경 개선",
       tech: ["Cypress", "React.js", "styled-components", "BDD", "Firestore"]
     },
     {
-      company: "우아한형제들",
+      company: lang === 'en' ? "Woowa Bros." : "우아한형제들",
       role: "Quality Engineer",
       period: "2023.03 ~ 2024.01",
-      description: "국내 1위 배달 플랫폼의 커머스/정산 시스템 품질 보증",
-      highlights: ["테스트 전략 수립", "리소스 예측 모델(ARIMA) 구축", "외부 에이전트 기술 가이드 작성"],
-      impact: "리소스 효율성 30% 향상",
+      description: t.companies.woowa,
+      highlights: lang === 'en'
+        ? ["Test strategy establishment", "ARIMA resource prediction model", "External agent technical guide"]
+        : ["테스트 전략 수립", "리소스 예측 모델(ARIMA) 구축", "외부 에이전트 기술 가이드 작성"],
+      impact: lang === 'en' ? "30% resource efficiency improvement" : "리소스 효율성 30% 향상",
       tech: ["E2E Testing", "API Testing", "TypeScript", "Data Analysis"]
     },
     {
       company: "Ground X",
-      role: "Senior Quality Engineer",
+      role: "Senior Quality Engineer", 
       period: "2022.02 ~ 2023.02",
-      description: "카카오 블록체인 자회사, Klip Wallet 및 NFT Marketplace QA",
-      highlights: ["KIP-17 NFT 자동화 개발", "ERC-721A 기술 가이드 작성", "Web3.0 토큰 모듈 QA"],
-      impact: "테스트 효율성 98% 향상",
+      description: t.companies.groundx,
+      highlights: lang === 'en'
+        ? ["KIP-17 NFT automation", "ERC-721A technical guide", "Web3.0 token module QA"]
+        : ["KIP-17 NFT 자동화 개발", "ERC-721A 기술 가이드 작성", "Web3.0 토큰 모듈 QA"],
+      impact: lang === 'en' ? "98% test efficiency improvement" : "테스트 효율성 98% 향상",
       tech: ["Blockchain", "Python", "Solidity", "Web3", "Klaytn"]
     },
     {
       company: "NHN",
       role: "Senior Quality Engineer",
       period: "2020.07 ~ 2022.02",
-      description: "NHN 클라우드 플랫폼(Toast) IaaS/DBaaS 품질 관리",
-      highlights: ["SaaS 빌링 로직 자동화", "OpenStack tempest 기반 테스트", "GOSS VM 서버 검증"],
-      impact: "빌링 테스트 1MD → 0.2MD",
+      description: t.companies.nhn,
+      highlights: lang === 'en'
+        ? ["SaaS billing automation", "OpenStack tempest testing", "GOSS VM validation"]
+        : ["SaaS 빌링 로직 자동화", "OpenStack tempest 기반 테스트", "GOSS VM 서버 검증"],
+      impact: lang === 'en' ? "Billing test 1MD → 0.2MD" : "빌링 테스트 1MD → 0.2MD",
       tech: ["Cloud", "Docker", "Jenkins", "Python", "OpenStack"]
     },
     {
-      company: "LG Electronics",
-      role: "Requirement Engineer | QA Engineer",
+      company: lang === 'en' ? "LG Electronics" : "LG전자",
+      role: lang === 'en' ? "Requirement Engineer | QA Engineer" : "요구사항 엔지니어 | QA 엔지니어",
       period: "2012.04 ~ 2020.07",
-      description: "글로벌 가전 1위 기업의 SW 인프라 구축 및 품질 관리",
-      highlights: ["Git/Gerrit 인프라 구축", "ISO 16750-2 Stress Test", "독일 고객사 요구사항 추적 시스템"],
-      impact: "빌드 실패율 90% → 10%",
+      description: t.companies.lg,
+      highlights: lang === 'en'
+        ? ["Git/Gerrit infrastructure", "ISO 16750-2 Stress Test", "German customer requirement tracking"]
+        : ["Git/Gerrit 인프라 구축", "ISO 16750-2 Stress Test", "독일 고객사 요구사항 추적 시스템"],
+      impact: lang === 'en' ? "Build failure 90% → 10%" : "빌드 실패율 90% → 10%",
       tech: ["Git/Gerrit", "Jenkins CI", "Python", "ISO 16750"]
     }
   ];
 
   const projects = [
     {
-      title: "AI 기반 테스트 케이스 생성 시스템",
-      company: "특허 출원",
+      title: lang === 'en' ? "AI-based Test Case Generation" : "AI 기반 테스트 케이스 생성 시스템",
+      company: lang === 'en' ? "Patent Filed" : "특허 출원",
       impact: "LLM",
-      metric: "활용 자동화",
-      description: "Large Language Model을 활용한 테스트 케이스 자동 생성 시스템 특허",
-      highlights: ["프롬프트 엔지니어링 최적화", "테스트 커버리지 향상"],
+      metric: lang === 'en' ? "Automation" : "활용 자동화",
+      description: lang === 'en' 
+        ? "Patent for automatic test case generation system using Large Language Model"
+        : "Large Language Model을 활용한 테스트 케이스 자동 생성 시스템 특허",
+      highlights: lang === 'en'
+        ? ["Prompt engineering optimization", "Test coverage improvement"]
+        : ["프롬프트 엔지니어링 최적화", "테스트 커버리지 향상"],
       tech: ["AI", "LLM", "Prompt Engineering", "Patent"]
     },
     {
-      title: "NFT Marketplace 자동화",
+      title: lang === 'en' ? "NFT Marketplace Automation" : "NFT Marketplace 자동화",
       company: "Ground X",
       impact: "98%",
-      metric: "효율성 향상",
-      description: "수동 생성 대비 300배 빠른 NFT 생성 자동화 구현",
-      highlights: ["KIP-17 표준 검증", "수백 개 NFT 동시 생성", "Solidity 스크립트 개발"],
+      metric: lang === 'en' ? "Efficiency Gain" : "효율성 향상",
+      description: lang === 'en'
+        ? "300x faster NFT generation automation compared to manual process"
+        : "수동 생성 대비 300배 빠른 NFT 생성 자동화 구현",
+      highlights: lang === 'en'
+        ? ["KIP-17 standard validation", "Concurrent NFT generation", "Solidity script development"]
+        : ["KIP-17 표준 검증", "수백 개 NFT 동시 생성", "Solidity 스크립트 개발"],
       tech: ["Python", "Solidity", "Web3", "Blockchain"]
     },
     {
-      title: "데이터 기반 리소스 예측 모델",
-      company: "우아한형제들",
+      title: lang === 'en' ? "Data-driven Resource Prediction" : "데이터 기반 리소스 예측 모델", 
+      company: lang === 'en' ? "Woowa Bros." : "우아한형제들",
       impact: "30%",
-      metric: "예측 정확도 향상",
-      description: "ARIMA 모델 활용 QA 리소스 예측 시스템 구축",
-      highlights: ["시계열 데이터 분석", "리소스 스케줄링 최적화"],
+      metric: lang === 'en' ? "Accuracy Improvement" : "예측 정확도 향상",
+      description: lang === 'en'
+        ? "QA resource prediction system using ARIMA model"
+        : "ARIMA 모델 활용 QA 리소스 예측 시스템 구축",
+      highlights: lang === 'en'
+        ? ["Time series data analysis", "Resource scheduling optimization"]
+        : ["시계열 데이터 분석", "리소스 스케줄링 최적화"],
       tech: ["Python", "ARIMA", "Data Analysis", "Pandas"]
     },
     {
-      title: "클라우드 빌링 테스트 자동화",
+      title: lang === 'en' ? "Cloud Billing Test Automation" : "클라우드 빌링 테스트 자동화",
       company: "NHN",
       impact: "80%",
-      metric: "리소스 절감",
-      description: "복잡한 SaaS 빌링 로직 E2E 자동화로 수동 테스트 대체",
-      highlights: ["요금제 변경 로직 검증", "Docker 기반 테스트 환경"],
+      metric: lang === 'en' ? "Resource Reduction" : "리소스 절감", 
+      description: lang === 'en'
+        ? "Complex SaaS billing logic E2E automation replacing manual tests"
+        : "복잡한 SaaS 빌링 로직 E2E 자동화로 수동 테스트 대체",
+      highlights: lang === 'en'
+        ? ["Billing plan change validation", "Docker-based test environment"]
+        : ["요금제 변경 로직 검증", "Docker 기반 테스트 환경"],
       tech: ["Docker", "Jenkins", "TypeScript", "API Testing"]
     }
   ];
 
   const skills = {
     testing: [
-      { name: "E2E Test Automation", level: 95 },
-      { name: "API Testing", level: 90 },
-      { name: "Destructive Testing", level: 85 },
-      { name: "Test Strategy & Planning", level: 95 }
+      { name: lang === 'en' ? "E2E Test Automation" : "E2E 테스트 자동화", level: 95 },
+      { name: lang === 'en' ? "API Testing" : "API 테스팅", level: 90 },
+      { name: lang === 'en' ? "Destructive Testing" : "파괴적 테스팅", level: 85 },
+      { name: lang === 'en' ? "Test Strategy & Planning" : "테스트 전략 및 계획", level: 95 }
     ],
     technical: [
       { name: "Python", level: 90 },
@@ -141,100 +210,166 @@ export default function Portfolio() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 shadow-sm">
+      <nav className="fixed top-0 w-full bg-white/95 dark:bg-gray-900/95 backdrop-blur-md z-40 shadow-sm transition-colors duration-300">
         <div className="max-w-6xl mx-auto px-6 py-4">
           <div className="flex justify-between items-center">
-            <div className="font-black text-2xl">
-              I<span className="text-red-500">.</span>QA<span className="text-blue-500">.</span>ALL
+            <div className="font-black text-2xl text-gray-900 dark:text-white">
+              I<span className="text-indigo-500">.</span>QA<span className="text-teal-500">.</span>ALL
             </div>
-            <div className="hidden md:flex gap-8">
-              <a href="#home" className="hover:text-purple-600 transition-colors">Home</a>
-              <a href="#about" className="hover:text-purple-600 transition-colors">About</a>
-              <a href="#work" className="hover:text-purple-600 transition-colors">Work</a>
-              <a href="#skills" className="hover:text-purple-600 transition-colors">Skills</a>
-              <a href="#contact" className="hover:text-purple-600 transition-colors">Contact</a>
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex gap-8 items-center">
+              <a href="#home" className="text-gray-700 hover:text-indigo-600 dark:text-gray-200 dark:hover:text-indigo-400 transition-colors font-medium">{t.nav.home}</a>
+              <a href="#about" className="text-gray-700 hover:text-indigo-600 dark:text-gray-200 dark:hover:text-indigo-400 transition-colors font-medium">{t.nav.about}</a>
+              <a href="#work" className="text-gray-700 hover:text-indigo-600 dark:text-gray-200 dark:hover:text-indigo-400 transition-colors font-medium">{t.nav.work}</a>
+              <a href="#skills" className="text-gray-700 hover:text-indigo-600 dark:text-gray-200 dark:hover:text-indigo-400 transition-colors font-medium">{t.nav.skills}</a>
+              <a href="#contact" className="text-gray-700 hover:text-indigo-600 dark:text-gray-200 dark:hover:text-indigo-400 transition-colors font-medium">{t.nav.contact}</a>
+              
+              {/* Language & Theme Toggles - Visible on all screens */}
+              <div className="flex items-center gap-3 ml-4 pl-4 border-l border-gray-300 dark:border-gray-700">
+                <button
+                  onClick={handleLangToggle}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors"
+                  aria-label="Toggle language"
+                  title={`Switch to ${lang === 'ko' ? 'English' : '한국어'}`}
+                >
+                  <Globe className="w-4 h-4 text-gray-700 dark:text-gray-200" />
+                  <span className="text-xs font-medium text-gray-700 dark:text-gray-200">{lang.toUpperCase()}</span>
+                </button>
+                <button
+                  onClick={handleThemeToggle}
+                  className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors"
+                  aria-label="Toggle theme"
+                  title={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+                >
+                  {isDark ? 
+                    <Sun className="w-4 h-4 text-yellow-400" /> : 
+                    <Moon className="w-4 h-4 text-gray-700" />
+                  }
+                </button>
+              </div>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden flex items-center gap-2">
+              {/* Mobile Language & Theme Toggles */}
+              <button
+                onClick={handleLangToggle}
+                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 transition-colors"
+                aria-label="Toggle language"
+              >
+                <Globe className="w-5 h-5 text-gray-700 dark:text-gray-200" />
+              </button>
+              <button
+                onClick={handleThemeToggle}
+                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 transition-colors"
+                aria-label="Toggle theme"
+              >
+                {isDark ? 
+                  <Sun className="w-5 h-5 text-yellow-400" /> : 
+                  <Moon className="w-5 h-5 text-gray-700" />
+                }
+              </button>
+              <button
+                onClick={handleMobileMenuToggle}
+                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                aria-label="Toggle mobile menu"
+              >
+                <Menu className="w-6 h-6 text-gray-700 dark:text-gray-200" />
+              </button>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section - Premium Design */}
+      {/* Mobile Menu */}
+      <MobileMenu
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+        navItems={t.nav}
+        lang={lang}
+        isDark={isDark}
+        onLangToggle={handleLangToggle}
+        onThemeToggle={handleThemeToggle}
+      />
+
+      {/* Hero Section - Refined Color Palette */}
       <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden">
-        {/* Premium Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900 via-purple-700 to-indigo-900"></div>
-
-        {/* Mesh Gradient Overlay */}
-        <div className="absolute inset-0 opacity-50">
-          <div className="absolute inset-0 bg-gradient-to-tr from-pink-500/20 via-transparent to-blue-500/20"></div>
-          <div className="absolute inset-0 bg-gradient-to-bl from-indigo-500/20 via-transparent to-purple-500/20"></div>
+        {/* Softer Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-800 via-indigo-600 to-teal-700 dark:from-gray-900 dark:via-indigo-900 dark:to-teal-950"></div>
+        
+        {/* Mesh Gradient Overlay - Softer opacity */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500/20 via-transparent to-blue-500/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-bl from-indigo-500/20 via-transparent to-teal-500/20"></div>
         </div>
-
+        
         {/* Geometric Patterns */}
         <div className="absolute inset-0 overflow-hidden">
-          {/* Large Circle */}
-          <div className="absolute -top-1/2 -right-1/2 w-[1000px] h-[1000px] rounded-full border border-white/10 animate-spin-slow"></div>
-          <div className="absolute -bottom-1/2 -left-1/2 w-[800px] h-[800px] rounded-full border border-white/10 animate-spin-slow-reverse"></div>
-
-          {/* Floating Geometric Shapes */}
-          <div className="absolute top-20 left-[10%] w-20 h-20 border-2 border-purple-400/20 rotate-45 animate-float"></div>
-          <div className="absolute top-40 right-[15%] w-16 h-16 border-2 border-pink-400/20 rounded-full animate-float-delay-2"></div>
-          <div className="absolute bottom-40 left-[20%] w-24 h-24 border-2 border-indigo-400/20 animate-float-delay-4"></div>
-
-          {/* Premium Grid Pattern */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]"></div>
-
-          {/* Gradient Orbs - More Sophisticated */}
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-500/20 rounded-full filter blur-3xl animate-pulse-slow"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/20 rounded-full filter blur-3xl animate-pulse-slow-delay"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/20 rounded-full filter blur-3xl animate-pulse-slow-delay-2"></div>
+          <div className="absolute -top-1/2 -right-1/2 w-[1000px] h-[1000px] rounded-full border border-white/5 animate-spin-slow"></div>
+          <div className="absolute -bottom-1/2 -left-1/2 w-[800px] h-[800px] rounded-full border border-white/5 animate-spin-slow-reverse"></div>
+          
+          <div className="absolute top-20 left-[10%] w-20 h-20 border-2 border-teal-400/10 rotate-45 animate-float"></div>
+          <div className="absolute top-40 right-[15%] w-16 h-16 border-2 border-cyan-400/10 rounded-full animate-float-delay-2"></div>
+          <div className="absolute bottom-40 left-[20%] w-24 h-24 border-2 border-indigo-400/10 animate-float-delay-4"></div>
+          
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:100px_100px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_50%,black,transparent)]"></div>
+          
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full filter blur-3xl animate-pulse-slow"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-teal-500/10 rounded-full filter blur-3xl animate-pulse-slow-delay"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-cyan-500/10 rounded-full filter blur-3xl animate-pulse-slow-delay-2"></div>
         </div>
-
+        
         {/* Particle Effect */}
         <div className="absolute inset-0">
-          {particles.map((p, i) => (
+          {[...Array(PARTICLE_COUNT)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-1 h-1 bg-white/30 rounded-full animate-float-up"
-              style={{ left: p.left, animationDelay: p.delay, animationDuration: p.duration }}
-            ></div>
+              className="absolute w-1 h-1 bg-white/20 rounded-full animate-float-up"
+              style={{
+                left: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 10}s`,
+                animationDuration: `${10 + Math.random() * 20}s`
+              }}
+            />
           ))}
         </div>
 
         {/* Content */}
         <div className="relative text-center text-white z-10 px-6">
-          {/* Premium Badge */}
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-sm mb-8 border border-white/20">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-white/90">Currently @ Moloco</span>
+            <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+            <span className="text-white/90">{t.hero.currentlyAt}</span>
           </div>
-
+          
           <h1 className="text-6xl md:text-8xl font-black mb-4 tracking-tight">
             <span className="inline-block animate-fade-in">I</span>
-            <span className="text-red-400 inline-block animate-fade-in animation-delay-100">.</span>
+            <span className="text-cyan-400 inline-block animate-fade-in animation-delay-100">.</span>
             <span className="inline-block animate-fade-in animation-delay-200">QA</span>
-            <span className="text-blue-400 inline-block animate-fade-in animation-delay-300">.</span>
+            <span className="text-teal-400 inline-block animate-fade-in animation-delay-300">.</span>
             <span className="inline-block animate-fade-in animation-delay-400">ALL</span>
           </h1>
-
-          <h2 className="text-3xl md:text-4xl font-light mb-2 animate-fade-in-up animation-delay-500">Jane Kim (김명지)</h2>
-          <p className="text-xl md:text-2xl text-purple-200 mb-8 animate-fade-in-up animation-delay-600">QA Engineer | FE Engineer</p>
-
+          
+          <h2 className="text-3xl md:text-4xl font-light mb-2 animate-fade-in-up animation-delay-500">
+            Jane Kim ({lang === 'en' ? '김도은' : '김도은'})
+          </h2>
+          <p className="text-xl md:text-2xl text-indigo-200 mb-8 animate-fade-in-up animation-delay-600">{t.hero.role}</p>
+          
           <div className="flex gap-4 justify-center flex-wrap animate-fade-in-up animation-delay-700">
             <span className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm border border-white/20 hover:bg-white/20 transition-all cursor-default">
-              15년차 전문가
+              {t.hero.yearsExpert}
             </span>
             <span className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm border border-white/20 hover:bg-white/20 transition-all cursor-default">
-              50+ Projects
+              {t.hero.projects}
             </span>
             <span className="px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-sm border border-white/20 hover:bg-white/20 transition-all cursor-default">
-              2 Patents
+              {t.hero.patents}
             </span>
           </div>
         </div>
-
-        {/* Scroll Indicator - Enhanced */}
+        
         <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-fade-in animation-delay-800">
           <div className="flex flex-col items-center gap-2">
             <span className="text-white/50 text-xs uppercase tracking-widest">Scroll</span>
@@ -243,116 +378,143 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* About Section - Enhanced with LinkedIn info */}
+      {/* About Section */}
       <section id="about" className={`py-20 transition-all duration-1000 ${isVisible.about ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center mb-12">About Me</h2>
-
-          <div className="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+          <h2 className="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">{t.about.title}</h2>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 md:p-12 transition-colors duration-300">
             <div className="grid md:grid-cols-3 gap-8">
               {/* Profile */}
               <div className="text-center">
-                <div className="w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
+                <div className="w-32 h-32 bg-gradient-to-br from-indigo-500 to-teal-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-4xl font-bold shadow-lg">
                   J
                 </div>
-                <h3 className="text-xl font-bold mb-2">Jane Kim (김명지)</h3>
-                <p className="text-gray-600 mb-4">QA Engineer | FE Engineer</p>
-
-                {/* Contact Info - Single Line */}
-                <div className="flex items-center justify-center gap-4 text-sm text-gray-600">
-                  <a href="mailto:lucykatz58@gmail.com" className="hover:text-purple-600 transition-colors flex items-center gap-1">
+                <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">
+                  Jane Kim ({lang === 'en' ? '김도은' : '김도은'})
+                </h3>
+                <p className="text-gray-700 dark:text-gray-300 mb-4 font-medium">{t.hero.role}</p>
+                
+                <div className="flex items-center justify-center gap-4 text-sm text-gray-700 dark:text-gray-400">
+                  <a href="mailto:lucykatz58@gmail.com" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center gap-1 font-medium">
                     <Mail size={14} />
-                    lucykatz58@gmail.com
+                    <span className="hidden sm:inline">lucykatz58@gmail.com</span>
                   </a>
                 </div>
 
-                {/* Certifications & Education - Enhanced Layout */}
-                <div className="mt-6 grid grid-cols-2 gap-3">
-                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Award className="w-4 h-4 text-purple-600" />
-                      <h4 className="text-sm font-semibold text-purple-700">Certifications</h4>
+                {/* Certifications & Education & Patents - Single Row with More Details */}
+                <div className="mt-6 grid grid-cols-3 gap-3">
+                  <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900/30 dark:to-indigo-800/30 rounded-lg p-3 border border-indigo-200 dark:border-indigo-700">
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <Award className="w-4 h-4 text-indigo-700 dark:text-indigo-400" />
+                      <h4 className="text-sm font-bold text-indigo-800 dark:text-indigo-300">{t.about.certifications}</h4>
                     </div>
-                    <div className="space-y-1 text-xs text-gray-700">
-                      <p>• ISTQB Advanced</p>
-                      <p>• IREB (CPRE)</p>
-                      <p>• IATF 16949:2016</p>
-                      <p>• Prompt Engineering</p>
+                    <div className="space-y-0.5 text-xs text-gray-800 dark:text-gray-300 font-medium">
+                      <p className="font-semibold">• ISTQB Advanced</p>
+                      <p className="font-semibold">• IREB (CPRE)</p>
+                      <p className="font-semibold">• IATF 16949</p>
+                      <p className="font-semibold">• Prompt Eng.</p>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-gradient-to-br from-teal-50 to-teal-100 dark:from-teal-900/30 dark:to-teal-800/30 rounded-lg p-3 border border-teal-200 dark:border-teal-700">
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <Brain className="w-4 h-4 text-teal-700 dark:text-teal-400" />
+                      <h4 className="text-sm font-bold text-teal-800 dark:text-teal-300">{t.about.education}</h4>
+                    </div>
+                    <div className="space-y-0.5 text-xs text-gray-800 dark:text-gray-300 font-medium">
+                      <p className="font-semibold">• {t.about.educationDetails.masters}</p>
+                      <p className="text-[10px] text-gray-600 dark:text-gray-400 ml-2">{t.about.educationDetails.inProgress}</p>
+                      <p className="font-semibold">• {t.about.educationDetails.bachelors}</p>
+                      <p className="text-[10px] text-gray-600 dark:text-gray-400 ml-2">{t.about.educationDetails.completed}</p>
                     </div>
                   </div>
 
-                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Brain className="w-4 h-4 text-blue-600" />
-                      <h4 className="text-sm font-semibold text-blue-700">Education</h4>
+                  <div className="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/30 dark:to-amber-800/30 rounded-lg p-3 border border-amber-200 dark:border-amber-700">
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <FileText className="w-4 h-4 text-amber-700 dark:text-amber-400" />
+                      <h4 className="text-sm font-bold text-amber-800 dark:text-amber-300">{t.about.patentsField}</h4>
                     </div>
-                    <div className="space-y-1 text-xs text-gray-700">
-                      <p>• Master’s in IT</p>
-                      <p className="text-gray-500 text-[10px]">&nbsp;&nbsp;(In Progress)</p>
-                      <p>• Bachelor’s in ICE</p>
-                      <p className="text-gray-500 text-[10px]">&nbsp;&nbsp;(Completed)</p>
+                    <div className="space-y-0.5 text-xs text-gray-800 dark:text-gray-300 font-medium">
+                      <p className="font-semibold">• AI/LLM Test Gen</p>
+                      <p className="font-semibold">• Voice Visualization</p>
+                      <p className="text-[10px] text-gray-600 dark:text-gray-400">{lang === 'en' ? 'Patent Pending' : '특허 출원중'}</p>
                     </div>
                   </div>
-                </div>
-
-                {/* Patents - Enhanced */}
-                <div className="mt-4 bg-gradient-to-br from-yellow-50 to-amber-100 rounded-lg p-4 border border-yellow-200">
-                  <div className="flex items-center justify-center gap-2">
-                    <FileText className="w-4 h-4 text-amber-600" />
-                    <p className="text-sm font-semibold text-amber-700">2 Patents Filed</p>
-                  </div>
-                  <p className="text-[10px] text-center text-gray-600 mt-1">AI/LLM Test Generation & Voice Visualization</p>
                 </div>
               </div>
 
               {/* Professional Summary */}
               <div className="md:col-span-2">
-                <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  데이터 기반 품질 혁신을 주도하는 QA/FE 엔지니어
+                <h3 className="text-2xl font-black mb-4 bg-gradient-to-r from-indigo-700 to-teal-700 bg-clip-text text-transparent">
+                  {t.about.headline}
                 </h3>
-
-                <div className="space-y-4 text-gray-700">
-                  <p className="leading-relaxed">
-                    현재 <span className="font-semibold text-purple-600">글로벌 애드테크 유니콘 Moloco</span>에서 DSP 클라우드 웹 서비스의 품질 보증과 프론트엔드 개발을 담당하고 있습니다. <span className="font-semibold">Cypress와 BDD 프레임워크</span>를 활용한 E2E 테스트 자동화와 <span className="font-semibold">React.js, styled-components, Tailwind CSS</span>를 사용한 컴포넌트 개발을 통해 제품 품질과 개발 효율성을 동시에 향상시키고 있습니다.
-                  </p>
-
-                  <p className="leading-relaxed">
-                    <span className="font-semibold text-purple-600">15년 이상의 QA 경험</span>을 바탕으로 대기업부터 스타트업까지 다양한 환경에서 품질 프로세스를 혁신해왔습니다. LG전자에서 8년간 글로벌 SW 인프라를 구축하며 <span className="font-semibold">빌드 실패율을 90%에서 10%로 감소</span>시켰고, Ground X에서는 <span className="font-semibold">NFT 생성 자동화로 98%의 효율성 향상</span>을 달성했습니다.
-                  </p>
-
-                  <p className="leading-relaxed">
-                    <span className="font-semibold text-purple-600">기술적 전문성과 비즈니스 임팩트</span>를 동시에 추구합니다. 우아한형제들에서 ARIMA 모델 기반 리소스 예측 시스템을 구축하여 <span className="font-semibold">효율성을 30% 향상</span>시켰으며, 개인적으로 <span className="font-semibold">LLM을 활용한 테스트 케이스 생성 시스템</span> 특허를 출원하는 등 혁신적인 솔루션 개발에도 적극적으로 참여하고 있습니다.
-                  </p>
+                
+                <div className="space-y-4 text-gray-800 dark:text-gray-300">
+                  {t.about.description.map((paragraph: string, index: number) => {
+                    // Bold important numbers and key terms
+                    const boldedParagraph = paragraph
+                      .replace(/Moloco/g, '<strong>Moloco</strong>')
+                      .replace(/15년/g, '<strong>15년</strong>')
+                      .replace(/15 years/g, '<strong>15 years</strong>')
+                      .replace(/8년/g, '<strong>8년</strong>')
+                      .replace(/8 years/g, '<strong>8 years</strong>')
+                      .replace(/90%에서 10%/g, '<strong>90%에서 10%</strong>')
+                      .replace(/90% to 10%/g, '<strong>90% to 10%</strong>')
+                      .replace(/98%/g, '<strong>98%</strong>')
+                      .replace(/30%/g, '<strong>30%</strong>')
+                      .replace(/LG전자/g, '<strong>LG전자</strong>')
+                      .replace(/LG Electronics/g, '<strong>LG Electronics</strong>')
+                      .replace(/Ground X/g, '<strong>Ground X</strong>')
+                      .replace(/우아한형제들/g, '<strong>우아한형제들</strong>')
+                      .replace(/Woowa Bros\./g, '<strong>Woowa Bros.</strong>')
+                      .replace(/ARIMA/g, '<strong>ARIMA</strong>')
+                      .replace(/LLM/g, '<strong>LLM</strong>')
+                      .replace(/Cypress/g, '<strong>Cypress</strong>')
+                      .replace(/BDD/g, '<strong>BDD</strong>')
+                      .replace(/React\.js/g, '<strong>React.js</strong>')
+                      .replace(/E2E/g, '<strong>E2E</strong>')
+                      .replace(/NFT/g, '<strong>NFT</strong>');
+                    
+                    return (
+                      <p 
+                        key={index} 
+                        className="leading-relaxed text-base font-medium"
+                        dangerouslySetInnerHTML={{ __html: boldedParagraph }}
+                      />
+                    );
+                  })}
                 </div>
-
-                {/* Key Achievements */}
-                <div className="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                  <div className="bg-purple-50 rounded-lg p-4">
-                    <div className="text-2xl font-bold text-purple-600">15+</div>
-                    <div className="text-xs text-gray-600">Years Experience</div>
-                  </div>
-                  <div className="bg-pink-50 rounded-lg p-4">
-                    <div className="text-2xl font-bold text-pink-600">5</div>
-                    <div className="text-xs text-gray-600">Major Companies</div>
-                  </div>
-                  <div className="bg-blue-50 rounded-lg p-4">
-                    <div className="text-2xl font-bold text-blue-600">98%</div>
-                    <div className="text-xs text-gray-600">Max Efficiency</div>
-                  </div>
-                  <div className="bg-green-50 rounded-lg p-4">
-                    <div className="text-2xl font-bold text-green-600">2</div>
-                    <div className="text-xs text-gray-600">Patents</div>
+                
+                {/* Key Achievements - Single Row */}
+                <div className="mt-6 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-lg p-4">
+                  <div className="grid grid-cols-4 gap-4 text-center">
+                    <div>
+                      <div className="text-2xl font-black text-indigo-800 dark:text-indigo-400">15+</div>
+                      <div className="text-xs text-gray-800 dark:text-gray-400 font-bold">{t.about.metrics.experience}</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-black text-teal-800 dark:text-teal-400">5</div>
+                      <div className="text-xs text-gray-800 dark:text-gray-400 font-bold">{t.about.metrics.companies}</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-black text-cyan-800 dark:text-cyan-400">98%</div>
+                      <div className="text-xs text-gray-800 dark:text-gray-400 font-bold">{t.about.metrics.efficiency}</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-black text-emerald-800 dark:text-emerald-400">2</div>
+                      <div className="text-xs text-gray-800 dark:text-gray-400 font-bold">{t.about.metrics.patents}</div>
+                    </div>
                   </div>
                 </div>
 
                 {/* Core Competencies */}
                 <div className="mt-6 flex flex-wrap gap-2">
-                  <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">Test Automation</span>
-                  <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">Frontend Development</span>
-                  <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">CI/CD</span>
-                  <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">Data Analysis</span>
-                  <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">Blockchain</span>
-                  <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">AI/LLM</span>
+                  {['Test Automation', 'Frontend Development', 'CI/CD', 'Data Analysis', 'Blockchain', 'AI/LLM'].map((skill) => (
+                    <span key={skill} className="px-3 py-1 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 rounded-full text-sm font-bold">
+                      {skill}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
@@ -360,33 +522,35 @@ export default function Portfolio() {
         </div>
       </section>
 
-      {/* Work Section - Enhanced Compact Design */}
-      <section id="work" className={`py-20 bg-white transition-all duration-1000 ${isVisible.work ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+      {/* Work Section */}
+      <section id="work" className={`py-20 bg-white dark:bg-gray-900 transition-all duration-1000 ${isVisible.work ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center mb-12">Work & Projects</h2>
-
-          {/* Tab Navigation - Enhanced */}
+          <h2 className="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">{t.work.title}</h2>
+          
+          {/* Tab Navigation */}
           <div className="flex justify-center mb-8">
-            <div className="bg-gray-100 rounded-full p-1 inline-flex">
+            <div className="bg-gray-100 dark:bg-gray-800 rounded-full p-1 inline-flex">
               <button
                 onClick={() => setActiveTab('experience')}
-                className={`px-6 py-2 rounded-full transition-all ${activeTab === 'experience'
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
-                    : 'text-gray-600 hover:text-gray-900'
-                  }`}
+                className={`px-6 py-2 rounded-full transition-all ${
+                  activeTab === 'experience' 
+                    ? 'bg-gradient-to-r from-indigo-600 to-teal-600 text-white shadow-md' 
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                }`}
               >
                 <Briefcase className="inline-block w-4 h-4 mr-2" />
-                Key Experiences
+                {t.work.keyExperiences}
               </button>
               <button
                 onClick={() => setActiveTab('projects')}
-                className={`px-6 py-2 rounded-full transition-all ${activeTab === 'projects'
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md'
-                    : 'text-gray-600 hover:text-gray-900'
-                  }`}
+                className={`px-6 py-2 rounded-full transition-all ${
+                  activeTab === 'projects' 
+                    ? 'bg-gradient-to-r from-indigo-600 to-teal-600 text-white shadow-md' 
+                    : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white'
+                }`}
               >
                 <Zap className="inline-block w-4 h-4 mr-2" />
-                Key Projects
+                {t.work.keyProjects}
               </button>
             </div>
           </div>
@@ -395,93 +559,80 @@ export default function Portfolio() {
           <div className="mt-8">
             {activeTab === 'experience' ? (
               <div className="space-y-4">
-                {/* Enhanced Timeline Header */}
+                {/* Timeline Header */}
                 <div className="relative mb-8 h-20">
-                  {/* Timeline Bar - centered vertically */}
-                  <div className="absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-purple-200 via-purple-400 to-pink-200 rounded-full transform -translate-y-1/2"></div>
-
-                  {/* Timeline Points */}
+                  <div className="absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-indigo-200 via-teal-400 to-cyan-200 rounded-full transform -translate-y-1/2"></div>
+                  
                   <div className="absolute inset-0 flex justify-between items-center">
-                    {/* Start Point */}
                     <div className="relative z-10">
-                      <div className="bg-white border-4 border-purple-400 rounded-full w-16 h-16 flex items-center justify-center shadow-lg">
-                        <span className="text-sm font-bold text-purple-600">2012</span>
+                      <div className="bg-white dark:bg-gray-800 border-4 border-indigo-400 rounded-full w-16 h-16 flex items-center justify-center shadow-lg">
+                        <span className="text-sm font-bold text-indigo-600 dark:text-indigo-400">2012</span>
                       </div>
-                      <div className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 whitespace-nowrap">Start</div>
+                      <div className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">{t.work.timeline.start}</div>
                     </div>
-
-                    {/* Journey Milestones */}
+                    
                     <div className="flex-1 flex justify-around items-center px-8">
-                      <div className="relative">
-                        <div className="w-3 h-3 bg-purple-300 rounded-full"></div>
-                        <span className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-400 whitespace-nowrap">2016</span>
-                      </div>
-                      <div className="relative">
-                        <div className="w-3 h-3 bg-purple-400 rounded-full"></div>
-                        <span className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-400 whitespace-nowrap">2020</span>
-                      </div>
-                      <div className="relative">
-                        <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                        <span className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-400 whitespace-nowrap">2023</span>
-                      </div>
+                      {[2016, 2020, 2023].map((year: number) => (
+                        <div key={year} className="relative">
+                          <div className="w-3 h-3 bg-teal-400 rounded-full"></div>
+                          <span className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-400 whitespace-nowrap">{year}</span>
+                        </div>
+                      ))}
                     </div>
-
-                    {/* Current Point */}
+                    
                     <div className="relative z-10">
-                      <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-full w-16 h-16 flex items-center justify-center shadow-lg animate-pulse">
+                      <div className="bg-gradient-to-r from-indigo-500 to-teal-500 rounded-full w-16 h-16 flex items-center justify-center shadow-lg animate-pulse">
                         <span className="text-sm font-bold text-white">2025</span>
                       </div>
-                      <div className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 whitespace-nowrap">Present</div>
+                      <div className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">{t.work.timeline.present}</div>
                     </div>
                   </div>
                 </div>
-
-                {/* Experience Years Badge - Moved below timeline */}
+                
                 <div className="flex justify-center mb-6">
-                  <div className="bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 px-4 py-2 rounded-full text-sm font-semibold shadow-md inline-flex items-center gap-2">
+                  <div className="bg-gradient-to-r from-indigo-100 to-teal-100 dark:from-indigo-900/30 dark:to-teal-900/30 text-indigo-700 dark:text-indigo-300 px-4 py-2 rounded-full text-sm font-semibold shadow-md inline-flex items-center gap-2">
                     <span className="text-lg">🚀</span>
-                    <span>15+ Years Journey</span>
+                    <span>{t.work.timeline.journey}</span>
                   </div>
                 </div>
-
-                {/* Experience Cards - Compact */}
-                <div className="grid gap-4">
-                  {experiences.map((exp, idx) => (
-                    <div key={idx} className="group bg-gradient-to-r from-gray-50 to-white rounded-xl p-6 hover:shadow-xl transition-all duration-300 border border-gray-100">
-                      <div className="flex flex-wrap items-start justify-between gap-4">
-                        {/* Company Info */}
-                        <div className="flex-1 min-w-[300px]">
-                          <div className="flex items-center gap-3 mb-2">
-                            <h3 className="text-xl font-bold">{exp.company}</h3>
-                            <span className="text-sm text-gray-500">{exp.period}</span>
+                
+                {/* Experience Cards - Project Style */}
+                <div className="grid md:grid-cols-2 gap-4">
+                  {experiences.map((exp, idx: number) => (
+                    <div key={idx} className="group relative bg-white dark:bg-gray-800 rounded-xl p-6 hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden">
+                      <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 to-teal-50 dark:from-indigo-900/20 dark:to-teal-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      
+                      <div className="relative z-10">
+                        <div className="flex items-start justify-between mb-3">
+                          <div>
+                            <h3 className="text-lg font-bold mb-1 text-gray-900 dark:text-white">{exp.company}</h3>
+                            <p className="text-sm text-indigo-700 dark:text-indigo-400 font-semibold">{exp.role}</p>
+                            <p className="text-xs text-gray-600 dark:text-gray-400 font-medium mt-1">{exp.period}</p>
                           </div>
-                          <p className="text-purple-600 font-medium mb-2">{exp.role}</p>
-                          <p className="text-sm text-gray-600 mb-3">{exp.description}</p>
-
-                          {/* Highlights */}
-                          <div className="flex flex-wrap gap-2 mb-3">
-                            {exp.highlights.map((item, i) => (
-                              <span key={i} className="text-xs bg-purple-50 text-purple-700 px-2 py-1 rounded">
-                                {item}
-                              </span>
-                            ))}
+                          <div className="text-right">
+                            <div className="text-xs text-gray-700 dark:text-gray-400 font-medium mb-1">{t.work.keyAchievement}</div>
+                            <div className="text-xl font-bold text-indigo-700 dark:text-indigo-400">{exp.impact}</div>
                           </div>
                         </div>
-
-                        {/* Impact Badge */}
-                        <div className="bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-lg p-4 text-center min-w-[150px]">
-                          <div className="text-xs opacity-90">Key Achievement</div>
-                          <div className="text-lg font-bold mt-1">{exp.impact}</div>
+                        
+                        <p className="text-sm text-gray-700 dark:text-gray-300 mb-3 font-medium">{exp.description}</p>
+                        
+                        <div className="space-y-1 mb-4">
+                          {exp.highlights.map((highlight: string, i: number) => (
+                            <div key={i} className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-300 font-medium">
+                              <CheckCircle size={12} className="text-emerald-500 flex-shrink-0" />
+                              {highlight}
+                            </div>
+                          ))}
                         </div>
-                      </div>
-
-                      {/* Tech Stack */}
-                      <div className="flex gap-2 mt-3 pt-3 border-t border-gray-100">
-                        {exp.tech.map((tech, i) => (
-                          <span key={i} className="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full">
-                            {tech}
-                          </span>
-                        ))}
+                        
+                        <div className="flex gap-2 flex-wrap">
+                          {exp.tech.map((tech: string, i: number) => (
+                            <span key={i} className="text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 px-2 py-1 rounded group-hover:bg-indigo-200 dark:group-hover:bg-indigo-800/40 transition-colors font-medium">
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -489,41 +640,36 @@ export default function Portfolio() {
               </div>
             ) : (
               <div className="grid md:grid-cols-2 gap-4">
-                {projects.map((project, idx) => (
-                  <div key={idx} className="group relative bg-white rounded-xl p-6 hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden">
-                    {/* Background Gradient on Hover */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-purple-50 to-pink-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
+                {projects.map((project, idx: number) => (
+                  <div key={idx} className="group relative bg-white dark:bg-gray-800 rounded-xl p-6 hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 to-teal-50 dark:from-indigo-900/20 dark:to-teal-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
                     <div className="relative z-10">
-                      {/* Header */}
                       <div className="flex items-start justify-between mb-3">
                         <div>
-                          <h3 className="text-lg font-bold mb-1">{project.title}</h3>
-                          <p className="text-sm text-gray-500">{project.company}</p>
+                          <h3 className="text-lg font-bold mb-1 text-gray-900 dark:text-white">{project.title}</h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 font-medium">{project.company}</p>
                         </div>
                         <div className="text-right">
-                          <div className="text-2xl font-bold text-purple-600">{project.impact}</div>
-                          <div className="text-xs text-gray-600">{project.metric}</div>
+                          <div className="text-2xl font-bold text-indigo-700 dark:text-indigo-400">{project.impact}</div>
+                          <div className="text-xs text-gray-700 dark:text-gray-400 font-medium">{project.metric}</div>
                         </div>
                       </div>
-
-                      {/* Description */}
-                      <p className="text-sm text-gray-600 mb-3">{project.description}</p>
-
-                      {/* Highlights */}
+                      
+                      <p className="text-sm text-gray-700 dark:text-gray-300 mb-3 font-medium">{project.description}</p>
+                      
                       <div className="space-y-1 mb-4">
-                        {project.highlights.map((highlight, i) => (
-                          <div key={i} className="flex items-center gap-2 text-xs text-gray-600">
-                            <CheckCircle size={12} className="text-green-500 flex-shrink-0" />
+                        {project.highlights.map((highlight: string, i: number) => (
+                          <div key={i} className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-300 font-medium">
+                            <CheckCircle size={12} className="text-emerald-500 flex-shrink-0" />
                             {highlight}
                           </div>
                         ))}
                       </div>
-
-                      {/* Tech Stack */}
+                      
                       <div className="flex gap-2 flex-wrap">
-                        {project.tech.map((tech, i) => (
-                          <span key={i} className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded group-hover:bg-purple-200 transition-colors">
+                        {project.tech.map((tech: string, i: number) => (
+                          <span key={i} className="text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 px-2 py-1 rounded group-hover:bg-indigo-200 dark:group-hover:bg-indigo-800/40 transition-colors font-medium">
                             {tech}
                           </span>
                         ))}
@@ -534,54 +680,53 @@ export default function Portfolio() {
               </div>
             )}
           </div>
-
-          {/* Summary Stats */}
-          <div className="mt-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl p-6 text-white text-center">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          
+          {/* Summary Stats - Single Row */}
+          <div className="mt-12 bg-gradient-to-r from-indigo-600 to-teal-600 rounded-xl p-4 text-white">
+            <div className="grid grid-cols-4 gap-4 text-center">
               <div>
-                <div className="text-3xl font-bold">15+</div>
-                <div className="text-sm opacity-90">Years Experience</div>
+                <div className="text-2xl md:text-3xl font-bold">15+</div>
+                <div className="text-xs md:text-sm opacity-90">{t.work.summaryStats.experience}</div>
               </div>
               <div>
-                <div className="text-3xl font-bold">5</div>
-                <div className="text-sm opacity-90">Major Companies</div>
+                <div className="text-2xl md:text-3xl font-bold">5</div>
+                <div className="text-xs md:text-sm opacity-90">{t.work.summaryStats.companies}</div>
               </div>
               <div>
-                <div className="text-3xl font-bold">50+</div>
-                <div className="text-sm opacity-90">Projects Delivered</div>
+                <div className="text-2xl md:text-3xl font-bold">50+</div>
+                <div className="text-xs md:text-sm opacity-90">{t.work.summaryStats.projects}</div>
               </div>
               <div>
-                <div className="text-3xl font-bold">80%</div>
-                <div className="text-sm opacity-90">Test Automation Rate</div>
+                <div className="text-2xl md:text-3xl font-bold">80%</div>
+                <div className="text-xs md:text-sm opacity-90">{t.work.summaryStats.automation}</div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Skills Section - Compact */}
+      {/* Skills Section */}
       <section id="skills" className={`py-20 transition-all duration-1000 ${isVisible.skills ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-4xl font-bold text-center mb-12">Technical Skills</h2>
-
-          <div className="bg-white rounded-xl shadow-lg p-8 md:p-10">
+          <h2 className="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">{t.skills.title}</h2>
+          
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 md:p-10">
             <div className="grid md:grid-cols-2 gap-8">
-              {/* Left Column - Testing & QA Skills */}
               <div>
-                <h3 className="text-lg font-bold mb-6 flex items-center gap-2 text-purple-600">
+                <h3 className="text-lg font-bold mb-6 flex items-center gap-2 text-indigo-600 dark:text-indigo-400">
                   <Target size={20} />
-                  Testing & QA Skills
+                  {t.skills.testing}
                 </h3>
                 <div className="space-y-3">
                   {skills.testing.map((skill, idx) => (
                     <div key={idx}>
                       <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium text-gray-700">{skill.name}</span>
-                        <span className="text-sm text-gray-500">{skill.level}%</span>
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{skill.name}</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">{skill.level}%</span>
                       </div>
-                      <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000"
+                      <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-indigo-500 to-teal-500 rounded-full transition-all duration-1000"
                           style={{ width: isVisible.skills ? `${skill.level}%` : '0%' }}
                         />
                       </div>
@@ -590,22 +735,21 @@ export default function Portfolio() {
                 </div>
               </div>
 
-              {/* Right Column - Technical Skills */}
               <div>
-                <h3 className="text-lg font-bold mb-6 flex items-center gap-2 text-blue-600">
+                <h3 className="text-lg font-bold mb-6 flex items-center gap-2 text-teal-600 dark:text-teal-400">
                   <Code size={20} />
-                  Development & Tools
+                  {t.skills.development}
                 </h3>
                 <div className="space-y-3">
                   {skills.technical.map((skill, idx) => (
                     <div key={idx}>
                       <div className="flex justify-between mb-1">
-                        <span className="text-sm font-medium text-gray-700">{skill.name}</span>
-                        <span className="text-sm text-gray-500">{skill.level}%</span>
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{skill.name}</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">{skill.level}%</span>
                       </div>
-                      <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full transition-all duration-1000"
+                      <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                        <div 
+                          className="h-full bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full transition-all duration-1000"
                           style={{ width: isVisible.skills ? `${skill.level}%` : '0%' }}
                         />
                       </div>
@@ -615,34 +759,34 @@ export default function Portfolio() {
               </div>
             </div>
 
-            {/* Additional Skills Tags */}
-            <div className="mt-8 pt-8 border-t border-gray-200">
-              <h4 className="text-sm font-semibold text-gray-700 mb-4 text-center">Additional Expertise</h4>
+            <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+              <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-4 text-center">{t.skills.additional}</h4>
               <div className="flex flex-wrap gap-2 justify-center">
-                <span className="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-medium">Cypress</span>
-                <span className="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-medium">Selenium</span>
-                <span className="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-medium">Postman</span>
-                <span className="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-medium">JIRA</span>
-                <span className="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-medium">Confluence</span>
-                <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">styled-components</span>
-                <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">Redux</span>
-                <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">Redis</span>
-                <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">Cursor IDE</span>
-                <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs font-medium">AWS</span>
+                {['Cypress', 'Selenium', 'Postman', 'JIRA', 'Confluence', 'styled-components', 'Redux', 'Redis', 'Cursor IDE', 'AWS'].map((tech) => (
+                  <span key={tech} className={`px-3 py-1 ${tech.includes('Cypress') || tech.includes('Selenium') || tech.includes('Postman') || tech.includes('JIRA') || tech.includes('Confluence') ? 'bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300' : 'bg-teal-50 dark:bg-teal-900/30 text-teal-700 dark:text-teal-300'} rounded-full text-xs font-medium`}>
+                    {tech}
+                  </span>
+                ))}
               </div>
             </div>
 
-            {/* Certifications & Languages */}
-            <div className="mt-6 grid md:grid-cols-2 gap-6 text-center">
-              <div className="bg-yellow-50 rounded-lg p-4">
-                <Award className="w-8 h-8 text-yellow-600 mx-auto mb-2" />
-                <h4 className="font-semibold text-gray-700 mb-2">Certifications</h4>
-                <p className="text-xs text-gray-600">ISTQB Advanced • IREB CPRE • IATF 16949</p>
-              </div>
-              <div className="bg-green-50 rounded-lg p-4">
-                <Brain className="w-8 h-8 text-green-600 mx-auto mb-2" />
-                <h4 className="font-semibold text-gray-700 mb-2">Languages</h4>
-                <p className="text-xs text-gray-600">Korean (Native) • English (Professional)</p>
+            {/* Certifications & Languages - Single Row */}
+            <div className="mt-6 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 rounded-lg p-4">
+              <div className="grid grid-cols-2 gap-6 text-center">
+                <div className="flex items-center justify-center gap-3">
+                  <Award className="w-6 h-6 text-amber-600 dark:text-amber-400" />
+                  <div className="text-left">
+                    <h4 className="font-semibold text-gray-700 dark:text-gray-300 text-sm">{t.about.certifications}</h4>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">ISTQB • IREB • IATF</p>
+                  </div>
+                </div>
+                <div className="flex items-center justify-center gap-3">
+                  <Brain className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
+                  <div className="text-left">
+                    <h4 className="font-semibold text-gray-700 dark:text-gray-300 text-sm">{t.skills.languages}</h4>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">{t.skills.languageDetails}</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -650,143 +794,95 @@ export default function Portfolio() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-20 bg-gradient-to-br from-purple-600 to-indigo-700 text-white">
-        <div className="max-w-4xl mx-auto px-6 text-center">
-          <h2 className="text-4xl font-bold mb-8">Let’s Connect!</h2>
-          <p className="text-xl mb-8 text-purple-100">
-            품질과 혁신의 교차점에서 함께 성장할 기회를 찾고 있습니다
+      <section id="contact" className="py-20 bg-gradient-to-br from-indigo-600 to-teal-700 text-white relative overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full filter blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-10 right-10 w-40 h-40 bg-cyan-300 rounded-full filter blur-3xl animate-pulse animation-delay-2000"></div>
+        </div>
+        
+        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+            {t.contact.title}
+          </h2>
+          
+          <p className="text-xl mb-10 text-indigo-100 max-w-2xl mx-auto leading-relaxed">
+            {t.contact.subtitle}
           </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <a href="mailto:lucykatz58@gmail.com" className="bg-white text-purple-600 px-6 py-3 rounded-full font-medium hover:shadow-lg transition-all hover:scale-105 flex items-center gap-2">
-              <Mail size={20} />
-              Email Me
+          
+          {/* CTA Buttons with enhanced styling */}
+          <div className="flex gap-4 justify-center flex-wrap mb-12">
+            <a 
+              href="mailto:lucykatz58@gmail.com" 
+              className="group bg-white text-indigo-600 px-8 py-4 rounded-full font-bold text-lg hover:shadow-2xl transition-all hover:scale-110 flex items-center gap-3 hover:bg-gradient-to-r hover:from-white hover:to-indigo-50"
+            >
+              <Mail size={22} className="group-hover:rotate-12 transition-transform" />
+              <span>{lang === 'en' ? "Let's Talk" : "대화하기"}</span>
+              <span className="text-2xl group-hover:translate-x-1 transition-transform">→</span>
             </a>
-            <a href="https://github.com/myeongji-kim" target="_blank" rel="noopener noreferrer" className="bg-purple-700 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-800 transition-all flex items-center gap-2">
-              <Github size={20} />
-              GitHub
+            
+            <a 
+              href="https://github.com/myeongji-kim" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="group bg-indigo-700/80 backdrop-blur-sm text-white px-6 py-4 rounded-full font-bold hover:bg-indigo-800 transition-all flex items-center gap-2 hover:shadow-xl hover:scale-105"
+            >
+              <Github size={22} className="group-hover:rotate-12 transition-transform" />
+              <span>GitHub</span>
             </a>
-            <a href="https://www.linkedin.com/in/janekim8928" target="_blank" rel="noopener noreferrer" className="bg-purple-700 text-white px-6 py-3 rounded-full font-medium hover:bg-purple-800 transition-all flex items-center gap-2">
-              <Linkedin size={20} />
-              LinkedIn
+            
+            <a 
+              href="https://www.linkedin.com/in/janekim8928" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="group bg-indigo-700/80 backdrop-blur-sm text-white px-6 py-4 rounded-full font-bold hover:bg-indigo-800 transition-all flex items-center gap-2 hover:shadow-xl hover:scale-105"
+            >
+              <Linkedin size={22} className="group-hover:rotate-12 transition-transform" />
+              <span>LinkedIn</span>
             </a>
           </div>
-
-          {/* Quick Stats */}
+          
+          {/* Response Time Badge */}
+          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm mb-8">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span className="text-white/90">
+              {lang === 'en' ? 'Usually responds within 24 hours' : '보통 24시간 내 답변'}
+            </span>
+          </div>
+          
+          {/* Quick Stats - No emojis */}
           <div className="mt-12 pt-8 border-t border-white/20">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-              <div>
-                <div className="text-3xl font-bold">@Moloco</div>
-                <div className="text-sm opacity-80">Current</div>
+            <div className="grid grid-cols-4 gap-4 text-center">
+              <div className="hover:scale-110 transition-transform cursor-default">
+                <div className="text-2xl md:text-3xl font-bold">@Moloco</div>
+                <div className="text-xs md:text-sm opacity-80">{lang === 'en' ? 'Current' : '현재'}</div>
               </div>
-              <div>
-                <div className="text-3xl font-bold">QA + FE</div>
-                <div className="text-sm opacity-80">Dual Role</div>
+              <div className="hover:scale-110 transition-transform cursor-default">
+                <div className="text-2xl md:text-3xl font-bold">QA + FE</div>
+                <div className="text-xs md:text-sm opacity-80">{lang === 'en' ? 'Dual Role' : '듀얼 롤'}</div>
               </div>
-              <div>
-                <div className="text-3xl font-bold">15+ Years</div>
-                <div className="text-sm opacity-80">Experience</div>
+              <div className="hover:scale-110 transition-transform cursor-default">
+                <div className="text-2xl md:text-3xl font-bold">15+ Years</div>
+                <div className="text-xs md:text-sm opacity-80">{lang === 'en' ? 'Experience' : '경력'}</div>
               </div>
-              <div>
-                <div className="text-3xl font-bold">2 Patents</div>
-                <div className="text-sm opacity-80">Innovation</div>
+              <div className="hover:scale-110 transition-transform cursor-default">
+                <div className="text-2xl md:text-3xl font-bold">2 Patents</div>
+                <div className="text-xs md:text-sm opacity-80">{lang === 'en' ? 'Innovation' : '혁신'}</div>
               </div>
             </div>
+          </div>
+          
+          {/* Final CTA Message - No emoji */}
+          <div className="mt-10 text-sm text-indigo-200">
+            {lang === 'en' 
+              ? "Whether it's about quality engineering, frontend development, or innovative tech solutions - I'd love to hear from you!"
+              : "품질 엔지니어링, 프론트엔드 개발, 혁신적인 기술 솔루션 - 무엇이든 편하게 연락주세요!"
+            }
           </div>
         </div>
       </section>
 
-      <style jsx>{`
-        @keyframes blob {
-          0% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(30px, -50px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
-          100% { transform: translate(0px, 0px) scale(1); }
-        }
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-        @keyframes spin-slow {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @keyframes spin-slow-reverse {
-          from { transform: rotate(360deg); }
-          to { transform: rotate(0deg); }
-        }
-        .animate-spin-slow {
-          animation: spin-slow 40s linear infinite;
-        }
-        .animate-spin-slow-reverse {
-          animation: spin-slow-reverse 60s linear infinite;
-        }
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(45deg); }
-          50% { transform: translateY(-20px) rotate(45deg); }
-        }
-        @keyframes float-up {
-          0% { transform: translateY(100vh) translateX(0); opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 1; }
-          100% { transform: translateY(-100vh) translateX(100px); opacity: 0; }
-        }
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-        .animate-float-delay-2 {
-          animation: float 6s ease-in-out infinite;
-          animation-delay: 2s;
-        }
-        .animate-float-delay-4 {
-          animation: float 6s ease-in-out infinite;
-          animation-delay: 4s;
-        }
-        .animate-float-up {
-          animation: float-up 20s linear infinite;
-        }
-        @keyframes pulse-slow {
-          0%, 100% { opacity: 0.2; }
-          50% { opacity: 0.3; }
-        }
-        .animate-pulse-slow {
-          animation: pulse-slow 4s ease-in-out infinite;
-        }
-        .animate-pulse-slow-delay {
-          animation: pulse-slow 4s ease-in-out infinite;
-          animation-delay: 1.3s;
-        }
-        .animate-pulse-slow-delay-2 {
-          animation: pulse-slow 4s ease-in-out infinite;
-          animation-delay: 2.6s;
-        }
-        @keyframes fade-in {
-          from { opacity: 0; transform: scale(0.9); }
-          to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes fade-in-up {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-          animation: fade-in 0.6s ease-out forwards;
-        }
-        .animate-fade-in-up {
-          animation: fade-in-up 0.6s ease-out forwards;
-        }
-        .animation-delay-100 { animation-delay: 0.1s; }
-        .animation-delay-200 { animation-delay: 0.2s; }
-        .animation-delay-300 { animation-delay: 0.3s; }
-        .animation-delay-400 { animation-delay: 0.4s; }
-        .animation-delay-500 { animation-delay: 0.5s; }
-        .animation-delay-600 { animation-delay: 0.6s; }
-        .animation-delay-700 { animation-delay: 0.7s; }
-        .animation-delay-800 { animation-delay: 0.8s; }
-      `}</style>
+      
     </div>
   );
 }
