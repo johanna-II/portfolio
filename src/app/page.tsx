@@ -482,6 +482,48 @@ export default function Portfolio() {
                     </span>
                   ))}
                 </div>
+
+                {/* Tech Stack Used */}
+                <div className="mt-8 p-4 bg-gradient-to-r from-gray-50 to-indigo-50 dark:from-gray-800 dark:to-indigo-900/30 rounded-lg border border-gray-200 dark:border-gray-700">
+                  <h4 className="text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
+                    <Code className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                    {lang === Lang.EN ? 'This portfolio was crafted with these technologies' : '이 포트폴리오는 이런 기술들로 만들어졌어요'}
+                  </h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+                      <span className="text-gray-700 dark:text-gray-300 font-medium">Next.js 15</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                      <span className="text-gray-700 dark:text-gray-300 font-medium">TypeScript</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
+                      <span className="text-gray-700 dark:text-gray-300 font-medium">Tailwind CSS</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
+                      <span className="text-gray-700 dark:text-gray-300 font-medium">Vercel</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                      <span className="text-gray-700 dark:text-gray-300 font-medium">React Hooks</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                      <span className="text-gray-700 dark:text-gray-300 font-medium">Lucide React</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                      <span className="text-gray-700 dark:text-gray-300 font-medium">Cursor IDE</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-xs">
+                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                      <span className="text-gray-700 dark:text-gray-300 font-medium">Git/GitHub</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
