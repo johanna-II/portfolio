@@ -29,8 +29,8 @@ const PARTICLE_COUNT = 20;
 
 export default function Portfolio() {
   const [activeTab, setActiveTab] = useState('experience');
-  const [isVisible, setIsVisible] = useState<Record<string, boolean>>({});
-  const [lang, setLang] = useState<Lang>('ko');
+  const [isVisible, setIsVisible] = useState({} as Record<string, boolean>);
+  const [lang, setLang] = useState('ko' as Lang);
   const [isDark, setIsDark] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -451,7 +451,7 @@ export default function Portfolio() {
                 </h3>
                 
                 <div className="space-y-4 text-gray-800 dark:text-gray-300">
-                  {t.about.description.map((paragraph: string, index: number) => {
+                  {t.about.description.map((paragraph, index) => {
                     // Bold important numbers and key terms
                     const boldedParagraph = paragraph
                       .replace(/Moloco/g, '<strong>Moloco</strong>')
@@ -572,7 +572,7 @@ export default function Portfolio() {
                     </div>
                     
                     <div className="flex-1 flex justify-around items-center px-8">
-                      {[2016, 2020, 2023].map((year: number) => (
+                      {[2016, 2020, 2023].map((year) => (
                         <div key={year} className="relative">
                           <div className="w-3 h-3 bg-teal-400 rounded-full"></div>
                           <span className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-400 whitespace-nowrap">{year}</span>
@@ -598,7 +598,7 @@ export default function Portfolio() {
                 
                 {/* Experience Cards - Project Style */}
                 <div className="grid md:grid-cols-2 gap-4">
-                  {experiences.map((exp, idx: number) => (
+                  {experiences.map((exp, idx) => (
                     <div key={idx} className="group relative bg-white dark:bg-gray-800 rounded-xl p-6 hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden">
                       <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 to-teal-50 dark:from-indigo-900/20 dark:to-teal-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       
@@ -618,7 +618,7 @@ export default function Portfolio() {
                         <p className="text-sm text-gray-700 dark:text-gray-300 mb-3 font-medium">{exp.description}</p>
                         
                         <div className="space-y-1 mb-4">
-                          {exp.highlights.map((highlight: string, i: number) => (
+                          {exp.highlights.map((highlight, i) => (
                             <div key={i} className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-300 font-medium">
                               <CheckCircle size={12} className="text-emerald-500 flex-shrink-0" />
                               {highlight}
@@ -627,7 +627,7 @@ export default function Portfolio() {
                         </div>
                         
                         <div className="flex gap-2 flex-wrap">
-                          {exp.tech.map((tech: string, i: number) => (
+                          {exp.tech.map((tech, i) => (
                             <span key={i} className="text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 px-2 py-1 rounded group-hover:bg-indigo-200 dark:group-hover:bg-indigo-800/40 transition-colors font-medium">
                               {tech}
                             </span>
@@ -640,7 +640,7 @@ export default function Portfolio() {
               </div>
             ) : (
               <div className="grid md:grid-cols-2 gap-4">
-                {projects.map((project, idx: number) => (
+                {projects.map((project, idx) => (
                   <div key={idx} className="group relative bg-white dark:bg-gray-800 rounded-xl p-6 hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 to-teal-50 dark:from-indigo-900/20 dark:to-teal-900/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     
@@ -659,7 +659,7 @@ export default function Portfolio() {
                       <p className="text-sm text-gray-700 dark:text-gray-300 mb-3 font-medium">{project.description}</p>
                       
                       <div className="space-y-1 mb-4">
-                        {project.highlights.map((highlight: string, i: number) => (
+                        {project.highlights.map((highlight, i) => (
                           <div key={i} className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-300 font-medium">
                             <CheckCircle size={12} className="text-emerald-500 flex-shrink-0" />
                             {highlight}
@@ -668,7 +668,7 @@ export default function Portfolio() {
                       </div>
                       
                       <div className="flex gap-2 flex-wrap">
-                        {project.tech.map((tech: string, i: number) => (
+                        {project.tech.map((tech, i) => (
                           <span key={i} className="text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 px-2 py-1 rounded group-hover:bg-indigo-200 dark:group-hover:bg-indigo-800/40 transition-colors font-medium">
                             {tech}
                           </span>
