@@ -31,9 +31,83 @@ export default function Portfolio() {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [particles, setParticles] = useState<Array<{ left: string; animationDelay: string; animationDuration: string }>>([]);
+  const [expandedExperience, setExpandedExperience] = useState<string | null>(null);
 
   const t = useMemo(() => translations[lang], [lang]);
 
+  // Project detail data
+  const projectData = {
+    moloco: {
+      projectName: lang === Lang.EN 
+        ? 'Internal Tool Integration & E2E Automation'
+        : '내부 툴 통합 및 E2E 자동화 프로젝트',
+      problem: lang === Lang.EN 
+        ? 'Internal customers (especially technical writers) had to manage two systems - Zendesk and Portal - separately, leading to high work fatigue and reduced operational efficiency.'
+        : '내부 고객(특히 테크니컬 라이터)들이 Zendesk와 Portal 두 개의 시스템을 이중으로 관리해야 해서 업무 피로도가 높고 운영 효율이 떨어지는 문제가 있었습니다.',
+      solution: lang === Lang.EN
+        ? 'Developed a "1-Pager" page that integrates Zendesk and Portal functions to manage everything on a single page. Also built E2E test automation scenarios based on Cypress + Cucumber.'
+        : '내부 고객의 페인 포인트를 해소하고자 Zendesk와 Portal의 기능을 통합하여 한 페이지에서 모든 것을 관리할 수 있는 \'1-Pager\' 페이지를 개발했습니다. 또한, Cypress + Cucumber 기반으로 E2E 테스트 자동화 시나리오를 구축하여 테스트 프로세스를 효율화했습니다.',
+      result: lang === Lang.EN
+        ? 'Reduced operational resources by 50% through integrated management page development and maximized QA efficiency with test automation.'
+        : '통합 관리 페이지 개발로 운영 리소스를 50% 절감했으며, 테스트 자동화 도입으로 QA 효율을 극대화했습니다. 최신 웹 기술(React, Typescript, Golang)을 활용하여 기능 개발 및 고객 이슈 대응 능력을 증명했습니다.'
+    },
+    woowa: {
+      projectName: lang === Lang.EN
+        ? 'Commerce/Settlement System Test Strategy'
+        : '커머스/정산 시스템 테스트 전략 수립',
+      problem: lang === Lang.EN
+        ? 'Project resource prediction was inaccurate as it depended on individual experience, causing difficulties in schedule estimation and resource allocation.'
+        : '프로젝트 리소스 예측이 개별 담당자의 경험에 의존해 부정확했고, 이로 인해 일정 산출 및 리소스 투입에 어려움이 있었습니다.',
+      solution: lang === Lang.EN
+        ? 'Established logic to precisely estimate test resources based on data using ARIMA prediction model. Created technical guides to strengthen outsourced testers\' capabilities.'
+        : 'ARIMA 예측 모델을 활용하여 테스트 소요 리소스를 데이터 기반으로 정교하게 추산하는 로직을 수립했습니다. 또한, 외주 테스터들의 역량 강화를 위한 기술 가이드를 작성하여 테스트 품질의 표준화를 이끌었습니다.',
+      result: lang === Lang.EN
+        ? 'Achieved 30% efficiency improvement through data-based resource prediction model, enabling more precise resource allocation.'
+        : '데이터 기반 리소스 예측 모델 적용으로 효율성이 30% 상승했으며, 보다 정교한 리소스 투입이 가능해졌습니다. 전체 QA 프로세스의 체계화를 통해 프로젝트의 안정성을 높였습니다.'
+    },
+    groundx: {
+      projectName: lang === Lang.EN
+        ? 'Klip Wallet & NFT Marketplace Test Automation'
+        : 'Klip Wallet & NFT 마켓플레이스 테스트 자동화',
+      problem: lang === Lang.EN
+        ? 'Had to manually generate dozens to hundreds of test data for NFT/token testing, consuming significant resources.'
+        : 'NFT/토큰 테스트를 위해 수십에서 수백 개의 테스트 데이터를 수동으로 생성해야 했고, 이 과정에 상당한 리소스가 소모되었습니다.',
+      solution: lang === Lang.EN
+        ? 'Developed and implemented scripts to automatically generate KIP/ERC tokens and NFTs using Python and Solidity.'
+        : 'Python 및 Solidity 언어를 활용하여 KIP/ERC 토큰 및 NFT를 자동으로 생성하는 스크립트를 개발하고 구현했습니다. 이를 통해 테스트 데이터 준비 과정을 자동화했습니다.',
+      result: lang === Lang.EN
+        ? 'Reduced test data preparation resources by 98% through automation, significantly improving product stability.'
+        : '자동화 도입으로 테스트 데이터 준비 리소스를 98% 절감했으며, 복합 및 예외 케이스 테스트를 효율적으로 수행하여 제품 안정성을 크게 향상시켰습니다.'
+    },
+    nhn: {
+      projectName: lang === Lang.EN
+        ? 'Cloud Platform Billing Logic Automation'
+        : '클라우드 플랫폼 과금 로직 자동화',
+      problem: lang === Lang.EN
+        ? 'Manual testing of complex SaaS billing logic was time-consuming and difficult to verify all change logic.'
+        : 'SaaS 서비스의 복잡한 과금 로직 테스트를 수동으로 진행해 시간 소모가 컸고, 모든 변경점 로직을 검증하기 어려웠습니다.',
+      solution: lang === Lang.EN
+        ? 'Built E2E test automation system for SaaS billing logic using Docker and Jenkins, enabling automatic verification of all related logic.'
+        : 'Docker와 Jenkins를 활용하여 SaaS 과금 로직을 위한 E2E 테스트 자동화 시스템을 구축했습니다. 이를 통해 요금제 변경 시 모든 관련 로직을 자동으로 검증할 수 있게 되었습니다.',
+      result: lang === Lang.EN
+        ? 'Reduced test execution time from 1MD to 0.2MD through test automation and significantly expanded test coverage.'
+        : '테스트 자동화 적용으로 테스트 수행 시간을 1MD에서 0.2MD로 단축했으며, 테스트 커버리지를 대폭 확대하여 요금제 관련 이슈를 사전에 검출할 수 있었습니다.'
+    },
+    lg: {
+      projectName: lang === Lang.EN
+        ? 'Global SW Infrastructure & Requirements Management'
+        : '글로벌 SW 인프라 및 요구사항 관리 체계 구축',
+      problem: lang === Lang.EN
+        ? 'Build failure rate reached 90% due to lack of code review system, and frequent claims (15 per year) occurred due to lack of customer requirement traceability.'
+        : '코드 리뷰 시스템 부재로 빌드 실패율이 90%에 달했고, 고객사 요구사항에 대한 추적성 부족으로 잦은 클레임(연간 15건)이 발생했습니다.',
+      solution: lang === Lang.EN
+        ? 'Built code management and review system based on Git/Gerrit, and established systematic customer requirement tracking using DOORS.'
+        : 'Git, Gerrit 기반의 코드 관리 및 리뷰 시스템을 구축하고, 요구공학 도구(DOORS)를 활용해 고객사 요구사항을 체계적으로 추적하는 시스템을 구축했습니다.',
+      result: lang === Lang.EN
+        ? 'Reduced build failure rate from 90% to 10% and customer claims from 15 to 3 cases per year.'
+        : '빌드 실패율을 90%에서 10%로 감소시켰고, 고객 클레임 건수를 15건에서 3건으로 대폭 감소시키는 데 기여했습니다. 이는 품질 및 프로세스 개선을 주도한 경험을 보여줍니다.'
+    }
+  };
 
 
   // Generate particles on client side only
@@ -79,6 +153,7 @@ export default function Portfolio() {
 
   const experiences = [
     {
+      id: 'moloco',
       company: "Moloco",
       role: lang === Lang.EN ? "QA Engineer II | FE Engineer" : "QA Engineer II | FE Engineer",
       period: "2024.08 ~ Present",
@@ -90,6 +165,7 @@ export default function Portfolio() {
       tech: ["Cypress", "React.js", "styled-components", "BDD", "Firestore"]
     },
     {
+      id: 'woowa',
       company: lang === Lang.EN ? "Woowa Bros." : "우아한형제들",
       role: "Quality Engineer",
       period: "2023.03 ~ 2024.01",
@@ -101,6 +177,7 @@ export default function Portfolio() {
       tech: ["E2E Testing", "API Testing", "TypeScript", "Data Analysis"]
     },
     {
+      id: 'groundx',
       company: "Ground X",
       role: "Senior Quality Engineer",
       period: "2022.02 ~ 2023.02",
@@ -112,6 +189,7 @@ export default function Portfolio() {
       tech: ["Blockchain", "Python", "Solidity", "Web3", "Klaytn"]
     },
     {
+      id: 'nhn',
       company: "NHN",
       role: "Senior Quality Engineer",
       period: "2020.07 ~ 2022.02",
@@ -123,6 +201,7 @@ export default function Portfolio() {
       tech: ["Cloud", "Docker", "Jenkins", "Python", "OpenStack"]
     },
     {
+      id: 'lg',
       company: lang === Lang.EN ? "LG Electronics" : "LG전자",
       role: lang === Lang.EN ? "Requirement Engineer | QA Engineer" : "요구사항 엔지니어 | QA 엔지니어",
       period: "2012.04 ~ 2020.07",
@@ -632,13 +711,72 @@ export default function Portfolio() {
                           ))}
                       </div>
 
-                        <div className="flex gap-2 flex-wrap">
+                        <div className="flex gap-2 flex-wrap mb-4">
                         {exp.tech.map((tech, i) => (
                             <span key={i} className="text-xs bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 px-2 py-1 rounded group-hover:bg-indigo-200 dark:group-hover:bg-indigo-800/40 transition-colors font-medium">
                             {tech}
                           </span>
                         ))}
                         </div>
+                        
+                        {/* Compact Expand/Collapse Button */}
+                        <div className="flex justify-end">
+                          <button
+                            onClick={() => setExpandedExperience(expandedExperience === exp.id ? null : exp.id)}
+                            className="text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium flex items-center gap-1 transition-colors"
+                          >
+                            <span>{expandedExperience === exp.id ? (lang === Lang.EN ? 'Hide Details' : '상세 내용 숨기기') : (lang === Lang.EN ? 'View Details' : '상세 내용 보기')}</span>
+                            <ChevronDown className={`w-3 h-3 transition-transform ${expandedExperience === exp.id ? 'rotate-180' : ''}`} />
+                          </button>
+                        </div>
+                        
+                        {/* Expandable Detail Section */}
+                        {expandedExperience === exp.id && projectData[exp.id as keyof typeof projectData] && (
+                          <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 animate-fade-in">
+                            {/* Project Name Header */}
+                            <div className="mb-3 pb-2 border-b border-gray-200 dark:border-gray-700">
+                              <h3 className="text-sm font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                                <Briefcase size={14} className="text-indigo-600 dark:text-indigo-400" />
+                                {projectData[exp.id as keyof typeof projectData].projectName}
+                              </h3>
+                            </div>
+                            
+                            <div className="space-y-3">
+                              {/* Problem */}
+                              <div>
+                                <h4 className="text-xs font-bold text-red-600 dark:text-red-400 mb-1 flex items-center gap-1">
+                                  <Target size={14} />
+                                  {lang === Lang.EN ? 'Problem' : '문제점'}
+                                </h4>
+                                <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                                  {projectData[exp.id as keyof typeof projectData].problem}
+                                </p>
+                              </div>
+                              
+                              {/* Solution */}
+                              <div>
+                                <h4 className="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-1 flex items-center gap-1">
+                                  <Zap size={14} />
+                                  {lang === Lang.EN ? 'Solution' : '해결책'}
+                                </h4>
+                                <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                                  {projectData[exp.id as keyof typeof projectData].solution}
+                                </p>
+                              </div>
+                              
+                              {/* Result */}
+                              <div>
+                                <h4 className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mb-1 flex items-center gap-1">
+                                  <Award size={14} />
+                                  {lang === Lang.EN ? 'Result & Contribution' : '결과 및 기여'}
+                                </h4>
+                                <p className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed">
+                                  {projectData[exp.id as keyof typeof projectData].result}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -880,6 +1018,15 @@ export default function Portfolio() {
       </section>
 
 
+      <style jsx>{`
+        @keyframes fade-in {
+          from { opacity: 0; transform: scale(0.9); }
+          to { opacity: 1; transform: scale(1); }
+        }
+        .animate-fade-in {
+          animation: fade-in 0.3s ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 }
