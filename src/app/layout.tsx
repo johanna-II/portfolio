@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Montserrat, Lato } from "next/font/google";
+import { Analytics } from '@vercel/analytics/react';
 import "./globals.css";
 
 const montserrat: ReturnType<typeof Montserrat> = Montserrat({
@@ -38,6 +39,7 @@ export default function RootLayout({
         className={`${montserrat.className} ${lato.className} antialiased`}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );
